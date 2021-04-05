@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Projects Editable</title>
+    <style>
+        label {
+            margin: 1rem 0;
+            display: block;
+        }
+
+        input,
+        textarea {
+            display: block;
+            width: 25rem;
+        }
+        td {
+            padding: 0.1rem;
+        }
+    </style>
+</head>
+<body>
+    {% if display_mode is none %}
+        {% include "projects_editable/_list.html" %} 
+    {% else %}
+        {{component(display_mode)}}
+    {% endif %}
+    <script src="{{ url_for('jembe.static', filename='js/jembe.js') }}" defer></script>
+</body>
+</html>

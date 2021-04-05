@@ -1,0 +1,2 @@
+FLASK_APP=jembe_io_examples
+FLASK_ENV=development
