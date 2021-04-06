@@ -1,7 +1,7 @@
 from typing import Optional
 
 from functools import cached_property
-from jembe import Component, listener, action, run_only_once
+from jembe import Component, listener, action
 from jembe_io_examples.jmb import jmb
 from jembe_io_examples.db import db
 from jembe_io_examples.models import Project

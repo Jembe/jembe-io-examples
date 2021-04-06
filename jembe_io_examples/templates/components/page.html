@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jembe Reusable Page Example</title>
+    <style>
+        body {
+            margin: 0;
+        }
+        /* Add a black background color to the top navigation */
+        .topnav {
+            background-color: lightgray;
+            overflow: hidden;
+        }
+
+        /* Style the links inside the navigation bar */
+        .topnav a {
+            float: left;
+            color: black;
+            text-align: center;
+            padding: 6px 16px;
+            text-decoration: none;
+            font-size: 17px;
+            border-bottom: 4px solid lightgray;
+            border-top: 4px solid transparent;
+        }
+
+        /* Change the color of links on hover */
+        .topnav a:hover {
+            background-color: black;
+            color: white;
+            border-bottom: 4px solid black;
+        }
+
+        /* Add a color to the active/current link */
+        .topnav a.active {
+            border-bottom: 4px solid black;
+        }
+        /* Table */
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 16px;
+        }
+        tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        input {
+            padding: 16px;
+        }
+        button {
+            padding: 4px 8px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="topnav">
+        {% for name in _config.supported_display_modes %}
+            {% if component(name).is_accessible %}
+            <a href="{{component().url}}" jmb-on:click.prevent.stop="{{component().jrl}}">{{name|capitalize}}</a>
+            {% endif %}
+        {% endfor %}
+    </nav>
+
+    {% if display_mode is not none %}
+        {{component(display_mode)}} 
+    {% endif %}
+        
+    <script src="{{ url_for('jembe.static', filename='js/jembe.js') }}" defer></script> 
+</body>
+</html>

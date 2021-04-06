@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
-from flask import redirect
-from jembe import page_url
+from flask import render_template
+# from flask import redirect
+# from jembe import page_url
 
 if TYPE_CHECKING:
     from flask import Flask
@@ -11,5 +12,7 @@ def init_views(app: "Flask"):
 
     @app.route("/")
     def index():
-        """Redirects to Main page."""
-        return redirect(page_url("/projects"))
+        """Servers intex.html"""
+        return render_template("index.html")
+        # # redirectd to projects page
+        # return redirect(page_url("/projects"))
