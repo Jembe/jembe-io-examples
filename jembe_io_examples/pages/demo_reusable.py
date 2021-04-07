@@ -25,10 +25,32 @@ class ProjectForm(FormBase):
 
     def mount(self, component: "Component") -> "FormBase":
         if isinstance(component, CView):
-            print("disable")
             self.disable_field(self.name)
             self.disable_field(self.description)
         return super().mount(component)
+
+
+@config(
+    CCrudListRecords.Config(
+        db=db,
+        query=sa.orm.Query([Project.id, Project.name]).order_by(Project.id.desc()),
+        search_filter=lambda search: Project.name.ilike("%{}%".format(search)),
+        actions=[lambda self: ("Create", self.component("create"))],
+        record_actions=[
+            lambda self, record: ("View", self.component("view", id=record.id)),
+            lambda self, record: ("Edit", self.component("edit", id=record.id)),
+            lambda self, record: ("Delete", self.component("delete", id=record.id)),
+        ],
+        components={
+            "edit": (CEdit, CEdit.Config(db=db, model=Project, form=ProjectForm)),
+            "create": (CCreate, CCreate.Config(db=db, model=Project, form=ProjectForm)),
+            "view": (CView, CView.Config(db=db, model=Project, form=ProjectForm)),
+            "delete": (CDelete, CDelete.Config(db=db, model=Project)),
+        },
+    )
+)
+class CListProjects(CCrudListRecords):
+    pass
 
 
 class NoteForm(FormBase):
@@ -54,32 +76,6 @@ class NoteForm(FormBase):
                 (p.id, p.name) for p in db.session.query(Project)
             ]
         return super().mount(component)
-
-
-@config(
-    CCrudListRecords.Config(
-        db=db,
-        query=sa.orm.Query([Project.id, Project.name]).order_by(Project.id.desc()),
-        search_filter=lambda search: Project.name.ilike("%{}%".format(search)),
-        actions=[lambda self: ("Create", self.component("create"))],
-        record_actions=[
-            lambda self, record: ("View", self.component("view", id=record.id)),
-            lambda self, record: ("Edit", self.component("edit", id=record.id)),
-            lambda self, record: ("Delete", self.component("delete", id=record.id)),
-        ],
-        components={
-            "edit": (CEdit, CEdit.Config(db=db, model=Project, form=ProjectForm)),
-            "create": (
-                CCreate,
-                CCreate.Config(db=db, model=Project, form=ProjectForm),
-            ),
-            "view": (CView, CView.Config(db=db, model=Project, form=ProjectForm)),
-            "delete": (CDelete, CDelete.Config(db=db, model=Project)),
-        },
-    )
-)
-class CListProjects(CCrudListRecords):
-    pass
 
 
 @config(
