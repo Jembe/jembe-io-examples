@@ -5,6 +5,7 @@ from jembe import JembeInitParamSupport
 
 if TYPE_CHECKING:
     from jembe import Component
+    from wtforms import Field
 
 
 __all__ = ("FormBase",)
@@ -25,3 +26,9 @@ class FormBase(JembeInitParamSupport, Form, metaclass=FormBaseMeta):
     def mount(self, component:"Component") -> "FormBase":
         """Runs after form is initialised by CEdit compoent"""
         return self 
+
+    def disable_field(self, field:"Field"):
+        if field.render_kw is None:
+            field.render_kw = dict()
+        field.render_kw["disabled"] = True
+        field.render_kw["readonly"] = True

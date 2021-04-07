@@ -1,11 +1,25 @@
 <div style="padding: 2rem 2rem;">
-    <input jmb-on:input="page=0;search=$self.value;" value="{{search}}" type="text" placeholder="Search..." style="width:16rem;">
+    <div style="display:flex;">
+        <div style="flex-grow:1;">
+            <input jmb-on:input="page=0;search=$self.value;" value="{{search}}" type="text" placeholder="Search..." style="width:16rem;">
+        </div>
+        <div>
+            {% for aname, acref in actions %}
+                {% if acref.is_accessible %}
+                <button type="button" jmb-on:click="{{acref.jrl}}">{{aname}}</button>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
     <table style="margin: 1rem 0rem;">
         <thead>
             <tr>
                 {% for column in columns if column != "id"  %}
                 <th>{{column|capitalize}}</th>
                 {% endfor %}
+                {% if record_actions %}
+                <th>Actions</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -15,6 +29,18 @@
             {% for column in columns if column != "id"  %}
             <td>{{record[column]|default("", True)|truncate(75)}}</td>
             {% endfor %}
+            {% if record_actions %}
+            <td>
+            {% for raction in record_actions %}
+                {% with (aname, acref)=raction(record) %}
+                {% if acref.is_accessible %}
+                <button type="button" jmb-on:click="{{acref.jrl}}">{{aname}}</button>
+                {% endif %}
+                {% endwith %}
+            {% endfor %}
+            </td> 
+            {% else %}
+            {% endif %}
         </tr>
     {% endfor %}
     </table>

@@ -1,19 +1,17 @@
-from functools import cached_property
-from typing import Any, TYPE_CHECKING, Optional, Type, Union, Iterable, Dict, Callable, Tuple
+from typing import TYPE_CHECKING, Optional, Type, Union, Iterable, Dict, Callable, Tuple, Any
 from jembe import Component, run_only_once, action
 from .form import FormBase
+import sqlalchemy as sa
 
 if TYPE_CHECKING:
     from flask_sqlalchemy import SQLAlchemy, Model
     from jembe import RedisplayFlag, ComponentConfig, ComponentRef
-    import sqlalchemy as sa
 
-__all__ = ("CEdit",)
+__all__ = ("CCreate",)
 
-
-class CEdit(Component):
+class CCreate(Component):
     class Config(Component.Config):
-        default_template = "components/edit.html"
+        default_template = "components/create.html"
 
         def __init__(
             self,
@@ -44,10 +42,9 @@ class CEdit(Component):
                 changes_url=changes_url,
                 url_query_params=url_query_params,
             )
+    _config:Config
 
-    _config: Config
-
-    def __init__(self, id: int, form: Optional[FormBase] = None):
+    def __init__(self, form: Optional[FormBase] = None):
         super().__init__()
 
     @classmethod
@@ -57,14 +54,11 @@ class CEdit(Component):
             return config.form.load_init_param(value)
         return super().load_init_param(config, name, value)
 
-    @cached_property
-    def record(self) -> "Model":
-        return self._config.db.session.query(self._config.model).get(self.state.id)
 
     @run_only_once
     def mount(self):
         if self.state.form is None:
-            self.state.form = self._config.form(obj=self.record)
+            self.state.form = self._config.form(obj=self._config.model())
         self.state.form.mount(self)
 
     @action
@@ -72,11 +66,13 @@ class CEdit(Component):
         self.mount()
         if self.state.form.validate():
             try:
-                self.state.form.populate_obj(self.record)
+                record = self._config.model()
+                self.state.form.populate_obj(record)
+                self._config.db.session.add(record)
                 self._config.db.session.commit()
-                self.emit("save", record=self.record, id=self.record.id)
+                self.emit("save", record=record, id=record.id)
                 self.emit(
-                    "pushNotification", message="{} saved".format(str(self.record))
+                    "pushNotification", message="{} saved".format(str(record))
                 )
                 # don't execute display after sucessfull save
                 return False
@@ -103,4 +99,4 @@ class CEdit(Component):
 
     @property
     def title(self):
-        return "Edit: {}".format(self.record)
+        return "Create {}".format(self._config.model.__name__)

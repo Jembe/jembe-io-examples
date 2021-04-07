@@ -57,7 +57,7 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-        input {
+        input, textarea, select {
             padding: 16px;
         }
         button {
@@ -68,7 +68,7 @@
 <body>
     <nav class="topnav">
         {% for name in _config.supported_display_modes %}
-            {% if component(name).is_accessible %}
+            {% if component_reset(name).is_accessible %}
             <a href="{{component().url}}" jmb-on:click.prevent.stop="{{component().jrl}}">{{name|capitalize}}</a>
             {% endif %}
         {% endfor %}
@@ -78,6 +78,7 @@
         {{component(display_mode)}} 
     {% endif %}
         
+    {{component("_notifications")}}
     <script src="{{ url_for('jembe.static', filename='js/jembe.js') }}" defer></script> 
 </body>
 </html>

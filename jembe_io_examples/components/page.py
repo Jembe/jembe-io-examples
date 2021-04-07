@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Callable, Dict, Iterable, Optional, Tuple, Union
 from functools import cached_property
 from jembe import Component, listener
+from .notifications import CNotifications
 
 if TYPE_CHECKING:
     from jembe import ComponentRef, ComponentConfig, RedisplayFlag, Event
@@ -24,6 +25,12 @@ class CPage(Component):
             self.default_template = "components/page.html"
             if template is None:
                 template = ("", self.default_template)
+
+            if components is None:
+                components = dict()
+
+            if "_notifications" not in components:
+                components["_notifications"] = CNotifications
 
             super().__init__(
                 template=template,

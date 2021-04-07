@@ -1,0 +1,24 @@
+<div style="margin:2rem;max-width:600px;">
+    <h2>{{title}}</h2>
+    {% for field in form  %}
+        <div style="margin-top:0.5rem;">
+            {{field.label}}
+        </div>
+        <div style="display:flex;">
+            {{field(**{"jmb-on:change.defer":"form." + field.name +" = $self.value", "id":false, "style":"width:100%;"})}}
+        </div>
+        {% if field.errors %}
+        <div style="color:red;">
+            <ul>
+            {% for error in field.errors %}
+                <li>{{error}}</li> 
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    {% endfor %}
+    <div style="text-align:right;margin: 2rem 0;">
+        <button jmb-on:click="save()">Save</button>
+        <button jmb-on:click="cancel()">Cancel</button>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, Optional, Union, Iterable, Dict, Callable, Tuple
+from functools import partial
 from math import ceil
 from jembe import Component
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +14,7 @@ __all__ = ("CListRecords",)
 
 class CListRecords(Component):
     class Config(Component.Config):
+        default_template = "components/list_records.html"
         def __init__(
             self,
             db: "SQLAlchemy",
@@ -20,6 +22,9 @@ class CListRecords(Component):
             search_filter: Optional[
                 Callable[[str], "sa.sql.expression.Operators"]
             ] = None,
+            actions: Iterable[
+                Callable[["CListRecords"], Tuple[str, str]]
+            ] = (),
             record_actions: Iterable[
                 Callable[["CListRecords", "Model"], Tuple[str, str]]
             ] = (),
@@ -36,6 +41,7 @@ class CListRecords(Component):
             self.db = db
             self.query = query
             self.search_filter = search_filter
+            self.actions = actions
             self.record_actions = record_actions
             self.page_size = page_size
 
@@ -46,7 +52,6 @@ class CListRecords(Component):
             if "search" not in url_query_params.values():
                 url_query_params["s"] = "search"
 
-            self.default_template = "components/list_records.html"
             if template is None:
                 # if component specific template does not exist use default one
                 template = ("", self.default_template)
@@ -87,5 +92,9 @@ class CListRecords(Component):
             self.end_record_index = self.total_records
         self.columns = [cd.get("name", None) for cd in self.records.column_descriptions]
         self.records = self.records[self.start_record_index : self.end_record_index]
+
+        # actions
+        self.actions = [a(self) for a in self._config.actions]
+        self.record_actions = [partial(a, self) for a in self._config.record_actions]
 
         return super().display()
