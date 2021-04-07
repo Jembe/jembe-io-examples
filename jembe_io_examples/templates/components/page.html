@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+       jmb-local="{componentsOnPage: []}">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -65,11 +67,14 @@
         }
     </style>
 </head>
-<body>
+<body jmb-on:jembe-update-page.camel.window="$local.componentsOnPage = $jmb.componentsOnPage();">
     <nav class="topnav">
         {% for name in _config.supported_display_modes %}
             {% if component_reset(name).is_accessible %}
-            <a href="{{component().url}}" jmb-on:click.prevent.stop="{{component().jrl}}">{{name|capitalize}}</a>
+            <a href="{{component().url}}" jmb-on:click.prevent.stop="{{component().jrl}}"
+                jmb-bind:class="{'active': $local.componentsOnPage.includes('{{component().exec_name}}')}">
+                {{name|capitalize}}
+            </a>
             {% endif %}
         {% endfor %}
     </nav>
