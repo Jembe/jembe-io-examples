@@ -1,6 +1,6 @@
 <div style="position:absolute; bottom:0; right:0; display:flex: z-index: 100; flex-direction:row;padding:1rem;">
     {% for noteId, (message, level) in notifications.items() %}
-        <div jmb-on:ready.delay-{{noteId}}.2500ms="notifications['{{noteId}}'] = null;$self.remove();"
+        <div jmb-on:ready.defer.delay-{{noteId}}.2500ms="notifications['{{noteId}}'] = null;$self.remove();"
             style="border:solid 1px lightgray;margin-top:1rem; padding:0.5rem 1rem;min-width:300px;background:white;box-shadow:2px 2px lightgray" >
             <div style="text-align:right;font-size:80%;">{{level}}</div>
             <div>{{message}}</div>
