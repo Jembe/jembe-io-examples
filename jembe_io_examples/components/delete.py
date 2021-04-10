@@ -1,11 +1,11 @@
+from typing import TYPE_CHECKING, Optional, Union, Iterable, Dict, Callable, Tuple
 from functools import cached_property
-from typing import TYPE_CHECKING, Optional, Type, Union, Iterable, Dict, Callable, Tuple
-from jembe import Component, run_only_once, action
+from jembe import Component, action
+import sqlalchemy as sa
 
 if TYPE_CHECKING:
     from flask_sqlalchemy import SQLAlchemy, Model
     from jembe import RedisplayFlag, ComponentConfig, ComponentRef
-    import sqlalchemy as sa
 
 __all__ = ("CDelete",)
 
@@ -57,9 +57,7 @@ class CDelete(Component):
             self._config.db.session.delete(self.record)
             self._config.db.session.commit()
             self.emit("delete", record=self.record, id=self.record.id)
-            self.emit(
-                "pushNotification", message="{} deleted".format(str(self.record))
-            )
+            self.emit("pushNotification", message="{} deleted".format(str(self.record)))
         except sa.exc.SQLAlchemyError as error:
             self._config.db.session.rollback()
             self.emit(

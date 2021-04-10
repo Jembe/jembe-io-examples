@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 
 def init_commands(app: "Flask"):
-    @app.cli.command("load-data")
+    @app.cli.command("jembe-io-examples-load-data")
     def load_data():
         from .db import db
         from .models import Project, Note
@@ -211,3 +211,4 @@ def init_commands(app: "Flask"):
                 )
             ],
         )
+        db.session.commit()

@@ -19,9 +19,6 @@ classifiers = [
 packages = [
     { include = "jembe_io_examples" },
 ]
-include = [
-    "LICENSE", "README.md"
-]
 
 [tool.poetry.dependencies]
 Jembe = "^0.3.0"
