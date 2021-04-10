@@ -1,5 +1,5 @@
 import pytest
-from jembe_auth_demo import create_app
+from jembe_io_examples import create_app
 
 
 @pytest.fixture

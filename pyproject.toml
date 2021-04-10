@@ -1,11 +1,30 @@
 [tool.poetry]
-name = "jembe-demo"
+name = "jembe-io-examples"
 version = "0.1.0"
-description = "Jembe.io examples"
-authors = ["Predrag Peranović <predrag.peranovic@blokkod.me>"]
+description = "jembe.io examples"
+license = "AGPL-3.0-only"
+authors = ["Predrag Peranovic <predrag.peranovic@blokkod.me>"]
+readme = "README.md"
+homepage = "https://jembe.io/examples"
+repository = "https://github.com/Jembe/jembe-io-examples"
+keywords = ["jembe", "examples"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: Flask",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Programming Language :: Python :: 3.8",
+]
+packages = [
+    { include = "jembe_io_examples" },
+]
+include = [
+    "LICENSE", "README.md"
+]
 
 [tool.poetry.dependencies]
-jembe = {path= "../jembe", develop=true}
+Jembe = "^0.3.0"
 python = "^3.8"
 python-dotenv = "^0.14.0"
 Flask-SQLAlchemy = "^2.4.4"

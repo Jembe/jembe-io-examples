@@ -2,10 +2,12 @@ import os
 from flask import Flask
 from . import jmb, db
 
+
 def create_app(config=None):
     from . import models, views, pages, commands
 
-    app = Flask(__name__, instance_relative_config=True)
+    instance_path = os.environ.get("FLASK_INSTANCE_PATH", None)
+    app = Flask(__name__, instance_relative_config=True, instance_path=instance_path)
     # app.config.from_mapping({SECRET_KEY="dev",})
     if config is not None:
         if isinstance(config, dict):
