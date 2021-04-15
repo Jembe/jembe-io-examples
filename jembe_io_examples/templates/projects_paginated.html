@@ -10,9 +10,9 @@
     <div style="font-size:85%; color:gray; border-bottom: 1px lightgray solid;">
         URL: <span jmb-on:jembe-update-page.window.camel="$self.innerText = document.location.pathname + document.location.search"></span>
     </div>
-    <h1>
-        Projects 
-    </h1>
+    <h1>Projects</h1>
+    <!-- Explicitly setting "search" state variable to input value and "page" to zero
+         when input event is fired (when value of input has been changed) -->
     <input jmb-on:input="page=0;search=$self.value;" value="{{search}}" type="text" placeholder="Search...">
     <ul>
     {% for project in projects  %}

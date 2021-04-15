@@ -8,9 +8,10 @@ __all__ = ("Projects",)
 
 @jmb.page("projects")
 class Projects(Component):
-    """ Displays searchable list of projects."""
+    """Displays projects list searchable by project name."""
 
     def __init__(self, search: str = ""):
+        """Defines "search" to be a component state variable."""
         super().__init__()
 
     def display(self):

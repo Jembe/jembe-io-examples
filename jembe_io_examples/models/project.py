@@ -1,5 +1,4 @@
-from sqlalchemy.sql.schema import ForeignKey
-from jembe_io_examples.db import db
+from ..db import db
 import sqlalchemy as sa
 
 __all__ = ("Project",)

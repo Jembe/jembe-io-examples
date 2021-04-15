@@ -11,6 +11,8 @@
         URL: <span jmb-on:jembe-update-page.window.camel="$self.innerText = document.location.pathname + document.location.search"></span>
     </div>
     <h1>Projects</h1>
+    <!-- Associates "search" state variable with value of input field,  
+         forcing a component to redisplay when value changes. -->
     <input jmb-model="search" type="text" placeholder="Search...">
     <ul>
     {% for project in projects  %}

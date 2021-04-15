@@ -1,10 +1,9 @@
 <h1>Edit: {{project.name}}</h1>
 <label>
     Name
+    <!-- defer modifier dellays sending request to server and redisplaying component -->
     <input type="text" value="{{name}}" jmb-on:change.defer="name=$self.value">
-    {% if error %}
-    <div style="color:red;">{{error}}</div>
-    {% endif %}
+    {% if error %} <div style="color:red;">{{error}}</div> {% endif %}
 </label>
 <label>
     Description

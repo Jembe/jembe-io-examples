@@ -1,19 +1,28 @@
 from math import ceil
 from jembe import Component
-from jembe_io_examples.jmb import jmb
-from jembe_io_examples.db import db
-from jembe_io_examples.models import Project
+from ..jmb import jmb
+from ..db import db
+from ..models import Project
 
 __all__ = ("ProjectsPaginated",)
 
 
-@jmb.page("projects_paginated", Component.Config(url_query_params={"p": "page", "s": "search"}))
+@jmb.page(
+    "projects_paginated",
+    Component.Config(url_query_params={"p": "page", "s": "search"}),
+)
 class ProjectsPaginated(Component):
-    """Displays searchable and paginated list of projects."""
+    """
+    Displays searchable and paginated list of projects.
+    
+    @jmb.page decorator, configures "page" and "search" state variables 
+    to be used as query parameters "p" and "s" when building url.
+    """
 
     page_size = 10
 
     def __init__(self, search: str = "", page: int = 0):
+        """Defines "search" and "page" state variables"""
         super().__init__()
 
     def display(self):

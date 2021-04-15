@@ -1,6 +1,6 @@
 from jembe import config, Component
-from jembe_io_examples.jmb import jmb
-from jembe_io_examples.components import (
+from ..jmb import jmb
+from ..components import (
     CPage,
     CCrudListRecords,
     CEdit,
@@ -9,8 +9,8 @@ from jembe_io_examples.components import (
     CCreate,
     CDelete,
 )
-from jembe_io_examples.db import db
-from jembe_io_examples.models import Project, Note
+from ..db import db
+from ..models import Project, Note
 from wtforms import validators as v, StringField, TextAreaField, SelectField
 import sqlalchemy as sa
 
@@ -18,6 +18,7 @@ __all__ = ("DemoReusableComponents",)
 
 
 class ProjectForm(FormBase):
+    """Defines project form using wtforms library"""
     name = StringField(
         validators=[v.DataRequired(), v.Length(max=Project.name.type.length)]
     )
@@ -25,6 +26,7 @@ class ProjectForm(FormBase):
 
     def mount(self, component: "Component") -> "FormBase":
         if isinstance(component, CView):
+            # disable all fields when form is used in view component
             self.disable_field(self.name)
             self.disable_field(self.description)
         return super().mount(component)
@@ -32,15 +34,21 @@ class ProjectForm(FormBase):
 
 @config(
     CCrudListRecords.Config(
+        # database engine
         db=db,
+        # db query to list records
         query=sa.orm.Query([Project.id, Project.name]).order_by(Project.id.desc()),
+        # search condition to be add to query
         search_filter=lambda search: Project.name.ilike("%{}%".format(search)),
+        # links in component header
         actions=[lambda self: ("Create", self.component("create"))],
+        # links for every record in list
         record_actions=[
             lambda self, record: ("View", self.component("view", id=record.id)),
             lambda self, record: ("Edit", self.component("edit", id=record.id)),
             lambda self, record: ("Delete", self.component("delete", id=record.id)),
         ],
+        # subcomonents and its configuration
         components={
             "edit": (CEdit, CEdit.Config(db=db, model=Project, form=ProjectForm)),
             "create": (CCreate, CCreate.Config(db=db, model=Project, form=ProjectForm)),
@@ -65,6 +73,7 @@ class NoteForm(FormBase):
             self.disable_field(self.name)
             self.disable_field(self.description)
             self.disable_field(self.project_id)
+            # displays only selected project inside view component
             self.project_id.choices = [
                 (p.id, p.name)
                 for p in db.session.query(Project).filter(
@@ -72,6 +81,7 @@ class NoteForm(FormBase):
                 )
             ]
         else:
+            # add projects in select project field
             self.project_id.choices = [
                 (p.id, p.name) for p in db.session.query(Project)
             ]
